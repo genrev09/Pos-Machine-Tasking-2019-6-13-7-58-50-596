@@ -1,0 +1,62 @@
+var ProductList = [
+    {"id": "0001", "name" : "Coca Cola", "price": 3},
+    {"id": "0002", "name" : "Diet Coke", "price": 4},
+    {"id": "0003", "name" : "Pepsi-Cola", "price": 5},
+    {"id": "0004", "name" : "Mountain Dew", "price": 6},
+    {"id": "0005", "name" : "Dr Pepper", "price": 7},
+    {"id": "0006", "name" : "Sprite", "price": 8},
+    {"id": "0007", "name" : "Diet Pepsi", "price": 9},
+    {"id": "0008", "name" : "Diet Mountain Dew", "price": 10},
+    {"id": "0009", "name" : "Diet Dr Pepper", "price": 11},
+    {"id": "0010", "name" : "Fanta", "price": 12}
+];
+
+function PrintReceipt(barcodeList){
+    filteredBarcodeList = filterBarcodeList(barcodeList);
+    return generateReceipt(filteredBarcodeList,barcodeList);
+}
+
+function filterBarcodeList(barcodeList){
+    return Array.from(new Set(barcodeList));
+}
+
+function generateReceipt(filteredBarcodeList,barcodeList){
+    let receipt = "Receipts\n------------------------------------------------------------\n";
+    let totalPrice = 0;
+
+    filteredBarcodeList.forEach(barcode => {
+        let barcodeCount = getCount(barcode, barcodeList);
+        let product = getProduct(barcode);
+        if(checkProduct(product)){
+            totalPrice += (product.price * barcodeCount);
+            receipt += product.name + "\t"+ product.price + "\t"+ barcodeCount+"\n";
+        } 
+        
+    });
+    receipt += "------------------------------------------------------------\n"+
+               "Price: "+ totalPrice;
+
+    return receipt;
+
+}
+
+function getCount(barcode, barcodeList){
+    return barcodeList.filter(_barcode=> barcode === _barcode).length;
+}
+
+function getProduct(barcode){
+    return ProductList.filter(product => product.id === barcode)[0];
+}
+
+function checkProduct(product){
+    return (product != null);
+}
+
+module.exports = {
+    PrintReceipt:PrintReceipt,
+    filterBarcodeList:filterBarcodeList,
+    getCount : getCount,
+    getProduct : getProduct,
+    checkProduct:checkProduct,
+    generateReceipt : generateReceipt,
+};
